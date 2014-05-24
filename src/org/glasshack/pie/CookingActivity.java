@@ -2,14 +2,8 @@ package org.glasshack.pie;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.speech.RecognizerIntent;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.*;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.TextView;
 import com.google.android.glass.app.Card;
 import com.google.android.glass.widget.CardScrollAdapter;
 import com.google.android.glass.widget.CardScrollView;
@@ -50,6 +44,16 @@ public class CookingActivity extends Activity {
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
+
+        cardScrollView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (view instanceof ScrollAware) {
+                    ScrollAware scrollAware = (ScrollAware) view;
+                    scrollAware.onTapped();
+                }
+            }
+        });
     }
 
     @Override
@@ -84,8 +88,6 @@ public class CookingActivity extends Activity {
     }
 
     private void itemSelected(int position, View view) {
-        Log.d(TAG, "Selected item: " + position);
-
         if (prevSelected != null) {
             prevSelected.deactivated();
         }

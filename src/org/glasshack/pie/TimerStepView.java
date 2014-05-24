@@ -3,7 +3,6 @@ package org.glasshack.pie;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -32,6 +31,9 @@ public class TimerStepView extends FrameLayout implements ScrollAware {
 
         uiHandler = new Handler(Looper.getMainLooper());
 
+        setFocusable(true);
+        setFocusableInTouchMode(true);
+
         originalTimerSeconds = timerSeconds;
 
         LayoutInflater inflater = (LayoutInflater) context
@@ -42,8 +44,6 @@ public class TimerStepView extends FrameLayout implements ScrollAware {
         tvStepText.setText(stepText);
 
         tvTimer = (TextView) findViewById(R.id.timer_digits);
-
-        countDownTimer = new Timer();
 
         updateTimer(timerSeconds);
     }
@@ -70,6 +70,8 @@ public class TimerStepView extends FrameLayout implements ScrollAware {
 
     @Override
     public void activated() {
+        countDownTimer = new Timer();
+
         timerSeconds = originalTimerSeconds;
         updateTimer(timerSeconds);
     }
@@ -78,21 +80,21 @@ public class TimerStepView extends FrameLayout implements ScrollAware {
     public void deactivated() {
         countDownTimer.cancel();
         countDownTimer.purge();
+        countDownTimer = null;
 
         timerStarted = false;
     }
 
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER && !timerStarted) {
+    public void startTimer() {
+        if (!timerStarted) {
             timerStarted = true;
 
-            updateTimer(timerSeconds);
-            countDownTimer.scheduleAtFixedRate(new UpdateTimerTask(), 1000, 1000);
-
-            return true;
+            countDownTimer.scheduleAtFixedRate(new UpdateTimerTask(), 0, 1000);
         }
+    }
 
-        return super.onKeyDown(keyCode, event);
+    @Override
+    public void onTapped() {
+        startTimer();
     }
 }

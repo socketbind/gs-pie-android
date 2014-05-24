@@ -9,4 +9,5 @@ public interface ScrollAware {
 
     void deactivated();
 
+    void onTapped();
 }
