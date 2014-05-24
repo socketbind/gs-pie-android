@@ -16,7 +16,12 @@ import java.util.TimerTask;
 public class TimerStepView extends FrameLayout implements ScrollAware {
 
     private TextView tvStepText;
+
     private TextView tvTimer;
+
+    private TextView tvFooter;
+
+    private TextView tvTimestamp;
 
     private int originalTimerSeconds, timerSeconds;
 
@@ -44,6 +49,8 @@ public class TimerStepView extends FrameLayout implements ScrollAware {
         tvStepText.setText(stepText);
 
         tvTimer = (TextView) findViewById(R.id.timer_digits);
+        tvFooter = (TextView) findViewById(R.id.footer);
+        tvTimestamp = (TextView) findViewById(R.id.timestamp);
 
         updateTimer(timerSeconds);
     }
@@ -62,7 +69,11 @@ public class TimerStepView extends FrameLayout implements ScrollAware {
             uiHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    updateTimer(--timerSeconds);
+                    if (timerSeconds == 0) {
+                        cancelTimer();
+                    } else {
+                        updateTimer(--timerSeconds);
+                    }
                 }
             });
         }
@@ -78,6 +89,10 @@ public class TimerStepView extends FrameLayout implements ScrollAware {
 
     @Override
     public void deactivated() {
+        cancelTimer();
+    }
+
+    private void cancelTimer() {
         countDownTimer.cancel();
         countDownTimer.purge();
         countDownTimer = null;
@@ -96,5 +111,13 @@ public class TimerStepView extends FrameLayout implements ScrollAware {
     @Override
     public void onTapped() {
         startTimer();
+    }
+
+    public void setFooter(String text) {
+        tvFooter.setText(text);
+    }
+
+    public void setTimestamp(String text) {
+        tvTimestamp.setText(text);
     }
 }
