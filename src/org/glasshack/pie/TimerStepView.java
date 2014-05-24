@@ -3,8 +3,6 @@ package org.glasshack.pie;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
-import android.view.LayoutInflater;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import java.util.Timer;
@@ -13,15 +11,9 @@ import java.util.TimerTask;
 /**
  * Created by gabriel on 2014.05.24..
  */
-public class TimerStepView extends FrameLayout implements ScrollAware {
-
-    private TextView tvStepText;
+public class TimerStepView extends SimpleStepView implements ScrollAware {
 
     private TextView tvTimer;
-
-    private TextView tvFooter;
-
-    private TextView tvTimestamp;
 
     private int originalTimerSeconds, timerSeconds;
 
@@ -32,25 +24,13 @@ public class TimerStepView extends FrameLayout implements ScrollAware {
     private boolean timerStarted = false;
 
     public TimerStepView(Context context, String stepText, int timerSeconds) {
-        super(context);
+        super(context, stepText, R.layout.timer_step);
 
         uiHandler = new Handler(Looper.getMainLooper());
 
-        setFocusable(true);
-        setFocusableInTouchMode(true);
-
         originalTimerSeconds = timerSeconds;
 
-        LayoutInflater inflater = (LayoutInflater) context
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        inflater.inflate(R.layout.timer_step, this, true);
-
-        tvStepText = (TextView) findViewById(R.id.step_text);
-        tvStepText.setText(stepText);
-
         tvTimer = (TextView) findViewById(R.id.timer_digits);
-        tvFooter = (TextView) findViewById(R.id.footer);
-        tvTimestamp = (TextView) findViewById(R.id.timestamp);
 
         updateTimer(timerSeconds);
     }
@@ -111,13 +91,5 @@ public class TimerStepView extends FrameLayout implements ScrollAware {
     @Override
     public void onTapped() {
         startTimer();
-    }
-
-    public void setFooter(String text) {
-        tvFooter.setText(text);
-    }
-
-    public void setTimestamp(String text) {
-        tvTimestamp.setText(text);
     }
 }

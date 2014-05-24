@@ -20,13 +20,7 @@
             >
 
         <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-                  android:id="@+id/timer_digits"
-                  android:textColor="@color/timer_display_color"
-                />
-
-        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
                   android:id="@+id/step_text"
-                  android:layout_below="@id/timer_digits"
                 />
 
     </RelativeLayout>

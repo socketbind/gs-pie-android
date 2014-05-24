@@ -1,6 +1,7 @@
 package org.glasshack.pie;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
@@ -27,8 +28,12 @@ import java.util.Locale;
 public class CookingActivity extends Activity {
 
     public static final String TAG = "CookingActivity";
+
     public static final String PREVIOUS = "previous";
     public static final String NEXT = "next";
+    public static final String SHOT = "shot";
+    public static final String CARD_POSITION = "card_position";
+
     private StepCardScrollAdapter adapter;
 
     private ScrollAware prevSelected;
@@ -40,7 +45,7 @@ public class CookingActivity extends Activity {
 
     private final VoiceConfig VOICE_CONFIG =
             new VoiceConfig("myhotwords",
-                    new String[]{PREVIOUS, NEXT});
+                    new String[]{PREVIOUS, NEXT, SHOT});
     private CardScrollView cardScrollView;
 
     public void onCreate(Bundle savedInstanceState) {
@@ -139,10 +144,35 @@ public class CookingActivity extends Activity {
         }
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putInt(CARD_POSITION, cardScrollView.getSelectedItemPosition());
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        cardScrollView.setSelection(savedInstanceState.getInt(CARD_POSITION, 0));
+    }
+
     private void createCards() {
         adapter = new StepCardScrollAdapter();
 
-        Card ingredientCard1 = new Card(this);
+        SimpleStepView ingredient1 = new SimpleStepView(this,
+                "- 1/2 L or 2 cups of flour\n" +
+                        "- 1 teaspoon of salt\n" +
+                        "- 3/4 of a stick (90 g) of tenderflake pastry lard\n" +
+                        "- 5 tablespoons of cold water\n" +
+                        "- 1 egg (for brushing)\n" +
+                        "- Milk (for brushing)"
+        );
+
+        ingredient1.setFooter("Crust");
+        ingredient1.setImageResource(R.drawable.intro);
+
+        /*Card ingredientCard1 = new Card(this);
         ingredientCard1.setText("- 1/2 L or 2 cups of flour\n" +
                 "- 1 teaspoon of salt\n" +
                 "- 3/4 of a stick (90 g) of tenderflake pastry lard\n" +
@@ -150,6 +180,8 @@ public class CookingActivity extends Activity {
                 "- 1 egg (for brushing)\n" +
                 "- Milk (for brushing)");
         ingredientCard1.setFootnote("Crust");
+        ingredientCard1.addImage(R.drawable.intro);
+        ingredientCard1.setImageLayout(Card.ImageLayout.FULL);*/
 
         Card ingredientCard2 = new Card(this);
         ingredientCard2.setText(
@@ -162,6 +194,8 @@ public class CookingActivity extends Activity {
                         "- 6-8 medium-sized apples"
         );
         ingredientCard2.setFootnote("Filling");
+        ingredientCard2.addImage(R.drawable.intro);
+        ingredientCard2.setImageLayout(Card.ImageLayout.FULL);
 
         Card step1 = new Card(this);
         step1.setText("Preheat the oven 200°C");
@@ -174,6 +208,8 @@ public class CookingActivity extends Activity {
         Card step3 = new Card(this);
         step3.setText("With a pastry blender or fork, crush the butter until it forms tiny balls with the flour. Then slowly add the water.");
         step3.setTimestamp("3/25");
+        step3.addImage(R.drawable.step3);
+        step3.setImageLayout(Card.ImageLayout.FULL);
 
         Card step4 = new Card(this);
         step4.setText("Wrap both of the dough balls and refrigerate them for 30 minutes before proceeding to the next step.");
@@ -182,17 +218,23 @@ public class CookingActivity extends Activity {
         Card step5 = new Card(this);
         step5.setText("On a floured counter-top, begin to roll the dough out into a circle shape about 2 inches larger in diameter than the pie pan.");
         step5.setTimestamp("5/25");
+        step5.addImage(R.drawable.step5);
+        step5.setImageLayout(Card.ImageLayout.FULL);
 
         Card step6 = new Card(this);
         step6.setText("Slowly lift the flattened dough off the counter-top by wrapping it completely around the rolling pin.");
         step6.setTimestamp("6/25");
+        step6.addImage(R.drawable.step6);
+        step6.setImageLayout(Card.ImageLayout.FULL);
 
         Card step7 = new Card(this);
         step7.setText("Unroll the dough over the pan, being careful not to let it tear. Fit it into the pan, pressing it against all the sides.");
         step7.setTimestamp("7/25");
+        step7.addImage(R.drawable.step7);
+        step7.setImageLayout(Card.ImageLayout.FULL);
 
         Card step8 = new Card(this);
-        step8.setText("Cut off the overhanging edges. Leave about 0,5 cm of extra dough over the pie pan.");
+        step8.setText("Cut off the overhanging edges. Leave about 0.5 cm of extra dough over the pie pan.");
         step8.setTimestamp("8/25");
 
         TimerStepView timerStep1 = new TimerStepView(this, "Place the pie shell in the refrigerator.", 15);
@@ -201,6 +243,8 @@ public class CookingActivity extends Activity {
         Card step10 = new Card(this);
         step10.setText("Peel and slice the apples into pieces about 1 cm cubes.");
         step10.setTimestamp("10/25");
+        step10.addImage(R.drawable.step10);
+        step10.setImageLayout(Card.ImageLayout.FULL);
 
         Card step11 = new Card(this);
         step11.setText("Put them into a large bowl and mix with sugar, salt, lemon juice, flour,nutmeg and cinnamon.");
@@ -213,6 +257,8 @@ public class CookingActivity extends Activity {
         Card step13 = new Card(this);
         step13.setText("Roll out the remaining ball of dough on a floured surface, just like you did before.");
         step13.setTimestamp("13/25");
+        step13.addImage(R.drawable.step13);
+        step13.setImageLayout(Card.ImageLayout.FULL);
 
         Card step14 = new Card(this);
         step14.setText("Gently fold it in half and make 4 to 5 half inch long slices along the fold and 4 slices in the center of the folded piece. These will allow the filling to breath and not break through the sides. Unfold the top crust set it aside.");
@@ -225,26 +271,38 @@ public class CookingActivity extends Activity {
         Card step16 = new Card(this);
         step16.setText("Pour the filling into the pie shell, spreading it out with the back of a spoon.");
         step16.setTimestamp("16/25");
+        step16.addImage(R.drawable.step16);
+        step16.setImageLayout(Card.ImageLayout.FULL);
 
         Card step17 = new Card(this);
         step17.setText("Brush the edges of the pie shell with a beaten egg.");
         step17.setTimestamp("17/25");
+        step17.addImage(R.drawable.step17);
+        step17.setImageLayout(Card.ImageLayout.FULL);
 
         Card step18 = new Card(this);
         step18.setText("Lay the sliced top crust over filling. Cut off the excess edges.");
         step18.setTimestamp("18/25");
+        step18.addImage(R.drawable.step18);
+        step18.setImageLayout(Card.ImageLayout.FULL);
 
         Card step19 = new Card(this);
         step19.setText("Take both thumbs facing each other and place them over the edge.");
         step19.setTimestamp("19/25");
+        step19.addImage(R.drawable.step19);
+        step19.setImageLayout(Card.ImageLayout.FULL);
 
         Card step20 = new Card(this);
         step20.setText("Push thumbs down and towards each other. Do this around the entire pie to seal it.");
         step20.setTimestamp("20/25");
+        step20.addImage(R.drawable.step20);
+        step20.setImageLayout(Card.ImageLayout.FULL);
 
         Card step21 = new Card(this);
         step21.setText("Brush the lattice with the egg wash.");
         step21.setTimestamp("21/25");
+        step21.addImage(R.drawable.step21);
+        step21.setImageLayout(Card.ImageLayout.FULL);
 
         Card step22 = new Card(this);
         step22.setText("Dust cinnamon and sugar over the top crust for an extra touch.");
@@ -253,14 +311,17 @@ public class CookingActivity extends Activity {
         TimerStepView timerStep2 = new TimerStepView(this, "Bake at 200°C for 15 minutes.", 15);
         timerStep2.setTimestamp("23/25");
 
-        Card step23 = new Card(this);
-        step23.setText("Remove when the top crust is golden.");
-        step23.setTimestamp("24/25");
+        Card step24 = new Card(this);
+        step24.setText("Remove when the top crust is golden.");
+        step24.setTimestamp("24/25");
+        step24.addImage(R.drawable.step24);
+        step24.setImageLayout(Card.ImageLayout.FULL);
 
         TimerStepView timerStep3 = new TimerStepView(this, "Allow the pie to cool 45 minutes to 1 hour at room temperature before serving.", 45);
-        timerStep2.setTimestamp("25/25");
+        timerStep3.setTimestamp("25/25");
+        timerStep3.setImageResource(R.drawable.step25);
 
-        adapter.add(ingredientCard1.getView());
+        adapter.add(ingredient1);
         adapter.add(ingredientCard2.getView());
         adapter.add(step1.getView());
         adapter.add(step2.getView());
@@ -285,7 +346,7 @@ public class CookingActivity extends Activity {
         adapter.add(step21.getView());
         adapter.add(step22.getView());
         adapter.add(timerStep2);
-        adapter.add(step23.getView());
+        adapter.add(step24.getView());
         adapter.add(timerStep3);
     }
 
@@ -304,15 +365,32 @@ public class CookingActivity extends Activity {
         // erre nem vagyok büszke
         TextView tvStepText = (TextView) view.findViewById(R.id.step_text);
 
-        if (tvStepText == null && view instanceof ViewGroup) {
-            ViewGroup viewGroup = (ViewGroup) view;
-            if (viewGroup.getChildCount() > 0) {
-                tvStepText = (TextView) viewGroup.getChildAt(0);
-            }
+        if (tvStepText == null) {
+            tvStepText = findFirstTextView(view);
         }
 
         if (tvStepText != null) {
             tts.speak(tvStepText.getText().toString(), TextToSpeech.QUEUE_FLUSH, null);
+        }
+    }
+
+    public TextView findFirstTextView(View view) {
+        if (view instanceof ViewGroup) {
+            ViewGroup viewGroup = (ViewGroup) view;
+
+            for (int i = 0; i < viewGroup.getChildCount(); i++) {
+                TextView firstTextView = findFirstTextView(viewGroup.getChildAt(i));
+
+                if (firstTextView != null) {
+                    return firstTextView;
+                }
+            }
+
+            return null;
+        } else if (view instanceof TextView) {
+            return (TextView) view;
+        } else {
+            return null;
         }
     }
 
@@ -430,6 +508,14 @@ public class CookingActivity extends Activity {
                         if (pos < cardScrollView.getAdapter().getCount()) {
                             cardScrollView.setSelection(++pos);
                         }
+                    }
+                });
+            } else if (SHOT.equals(vc.getLiteral())) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Intent i = new Intent("com.google.glass.action.TAKE_PICTURE");
+                        startActivity(i);
                     }
                 });
             }
