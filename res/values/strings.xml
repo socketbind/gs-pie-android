@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">pie</string>
+
+    <string name="lets_cook">Let\'s cook</string>
+    <string name="what_to_cook">what would like to cook?</string>
+    <string name="ingredients">Ingredients</string>
+    <string name="tap_to_start_timer">Tap to start timer</string>
+</resources>
