@@ -267,19 +267,25 @@ public class CookingActivity extends Activity {
         for (Step step : steps) {
             SimpleStepView stepView;
 
-            if (step.getType().equals("textTimer")) {
-                stepView = new TimerStepView(this, step.getBody(), step.getTimer());
+            // nem túl szép :)
+            if (step.getType().equals("video")) {
+                VideoStepView videoStepView = new VideoStepView(this, "file:///" + step.getBody());
+                adapter.add(videoStepView);
             } else {
-                stepView = new SimpleStepView(this, step.getBody());
+                if (step.getType().equals("textTimer")) {
+                    stepView = new TimerStepView(this, step.getBody(), step.getTimer());
+                } else {
+                    stepView = new SimpleStepView(this, step.getBody());
+                }
+
+                if (step.getImage() != null) {
+                    Picasso.with(CookingActivity.this).load(step.getImage().getGlassUrl()).into(stepView.getStepImageView());
+                }
+
+                stepView.setTimestamp(++stepIndex + "/" + steps.size());
+
+                adapter.add(stepView);
             }
-
-            if (step.getImage() != null) {
-                Picasso.with(CookingActivity.this).load(step.getImage().getGlassUrl()).into(stepView.getStepImageView());
-            }
-
-            stepView.setTimestamp(++stepIndex + "/" + steps.size());
-
-            adapter.add(stepView);
         }
     }
 
