@@ -82,6 +82,7 @@ public class CookingActivity extends Activity {
         setContentView(R.layout.loading);
         loading = (TextView) findViewById(R.id.loading);
         loadingIndeterminate = (SliderView) findViewById(R.id.indeterminate_loading);
+        loadingIndeterminate.startIndeterminate();
 
         voiceInputHelper = new VoiceInputHelper(this, new PieVoiceListener(),
                 VoiceInputHelper.newUserActivityObserver(this));
@@ -93,7 +94,7 @@ public class CookingActivity extends Activity {
             okHttpClient.setCache(new Cache(getCacheDir(), CACHE_SIZE));
         } catch (IOException e) {
             e.printStackTrace();
-            finish();
+            showError("HTTP client error.");
             return;
         }
 
@@ -121,7 +122,11 @@ public class CookingActivity extends Activity {
     }
 
     private void recipeFailedToDownload() {
-        loading.setText("Download failure.");
+        showError("Download failure.");
+    }
+
+    private void showError(String text) {
+        loading.setText(text);
         loadingIndeterminate.setVisibility(View.GONE);
     }
 
@@ -250,6 +255,11 @@ public class CookingActivity extends Activity {
         adapter = new StepCardScrollAdapter();
 
         SimpleStepView ingredients = new SimpleStepView(this, currentRecipe.getIndigrients());
+        ingredients.setFooter("Ingredients");
+        adapter.add(ingredients);
+
+        /*VideoStepView videoStepView = new VideoStepView(this, "http://www.leanbackplayer.com/videos/360p/elephants_dream_640x360_2.30.mp4");
+        adapter.add(videoStepView);*/
 
         int stepIndex = 0;
 
@@ -271,8 +281,6 @@ public class CookingActivity extends Activity {
 
             adapter.add(stepView);
         }
-
-        adapter.add(ingredients);
     }
 
     private void itemSelected(View view, int position) {
@@ -287,6 +295,9 @@ public class CookingActivity extends Activity {
             currentScrollAware.activated();
         }
 
+        if (tts != null) {
+            tts.stop();
+        }
 
         if (view instanceof SimpleStepView) {
             SimpleStepView simpleStepView = (SimpleStepView) view;

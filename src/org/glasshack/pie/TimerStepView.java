@@ -55,10 +55,8 @@ public class TimerStepView extends SimpleStepView implements ScrollAware {
                     if (timerSeconds == 0) {
                         cancelTimer();
 
-                        if (alarmPlayer != null) {
-                            alarmPlayer.start();
-                        }
-
+                        alarmPlayer = MediaPlayer.create(getContext(), R.raw.timer_expired);
+                        alarmPlayer.start();
                     } else {
                         updateTimer(--timerSeconds);
                     }
@@ -73,16 +71,16 @@ public class TimerStepView extends SimpleStepView implements ScrollAware {
 
         timerSeconds = originalTimerSeconds;
         updateTimer(timerSeconds);
-
-        alarmPlayer = MediaPlayer.create(getContext(), R.raw.timer_expired);
     }
 
     @Override
     public void deactivated() {
         cancelTimer();
 
-        alarmPlayer.release();
-        alarmPlayer = null;
+        if (alarmPlayer != null) {
+            alarmPlayer.release();
+            alarmPlayer = null;
+        }
     }
 
     private void cancelTimer() {
