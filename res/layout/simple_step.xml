@@ -44,7 +44,6 @@
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="@string/tap_to_start_timer"
                 />
 
         <TextView

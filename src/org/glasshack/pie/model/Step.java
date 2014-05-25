@@ -10,7 +10,7 @@ public class Step {
 
     private Image image;
 
-    private String timer;
+    private int timer;
 
     public String getType() {
         return type;
@@ -36,11 +36,11 @@ public class Step {
         this.image = image;
     }
 
-    public String getTimer() {
+    public int getTimer() {
         return timer;
     }
 
-    public void setTimer(String timer) {
+    public void setTimer(int timer) {
         this.timer = timer;
     }
 

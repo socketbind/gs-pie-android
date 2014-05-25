@@ -24,6 +24,8 @@ public class Image {
 
     private String public_id;
 
+    private String glassUrl;
+
     public String get_id() {
         return _id;
     }
@@ -104,4 +106,11 @@ public class Image {
         this.public_id = public_id;
     }
 
+    public String getGlassUrl() {
+        return glassUrl;
+    }
+
+    public void setGlassUrl(String glassUrl) {
+        this.glassUrl = glassUrl;
+    }
 }

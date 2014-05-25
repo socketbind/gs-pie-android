@@ -1,6 +1,7 @@
 package org.glasshack.pie;
 
 import android.content.Context;
+import android.media.MediaPlayer;
 import android.os.Handler;
 import android.os.Looper;
 import android.widget.TextView;
@@ -22,6 +23,8 @@ public class TimerStepView extends SimpleStepView implements ScrollAware {
     private Handler uiHandler;
 
     private boolean timerStarted = false;
+
+    private MediaPlayer alarmPlayer;
 
     public TimerStepView(Context context, String stepText, int timerSeconds) {
         super(context, stepText, R.layout.timer_step);
@@ -51,6 +54,11 @@ public class TimerStepView extends SimpleStepView implements ScrollAware {
                 public void run() {
                     if (timerSeconds == 0) {
                         cancelTimer();
+
+                        if (alarmPlayer != null) {
+                            alarmPlayer.start();
+                        }
+
                     } else {
                         updateTimer(--timerSeconds);
                     }
@@ -65,11 +73,16 @@ public class TimerStepView extends SimpleStepView implements ScrollAware {
 
         timerSeconds = originalTimerSeconds;
         updateTimer(timerSeconds);
+
+        alarmPlayer = MediaPlayer.create(getContext(), R.raw.timer_expired);
     }
 
     @Override
     public void deactivated() {
         cancelTimer();
+
+        alarmPlayer.release();
+        alarmPlayer = null;
     }
 
     private void cancelTimer() {

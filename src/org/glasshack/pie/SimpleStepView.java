@@ -23,7 +23,7 @@ public class SimpleStepView extends FrameLayout implements ScrollAware {
         this(context, stepText, R.layout.simple_step);
     }
 
-    public SimpleStepView(Context context, String stepText, int layout) {
+    protected SimpleStepView(Context context, String stepText, int layout) {
         super(context);
 
         setFocusable(true);
@@ -40,6 +40,7 @@ public class SimpleStepView extends FrameLayout implements ScrollAware {
         tvTimestamp = (TextView) findViewById(R.id.timestamp);
 
         ivStepImage = (ImageView) findViewById(R.id.step_image);
+        ivStepImage.setAlpha(0.4f);
     }
 
     @Override
@@ -64,6 +65,13 @@ public class SimpleStepView extends FrameLayout implements ScrollAware {
 
     public void setImageResource(int resId) {
         ivStepImage.setImageResource(resId);
-        ivStepImage.setAlpha(0.4f);
+    }
+
+    public String getStepText() {
+        return tvStepText.getText().toString();
+    }
+
+    public ImageView getStepImageView() {
+        return ivStepImage;
     }
 }
