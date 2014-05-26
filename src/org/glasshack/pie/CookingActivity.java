@@ -45,7 +45,6 @@ public class CookingActivity extends Activity {
 
     public static final String PREVIOUS = "previous";
     public static final String NEXT = "next";
-    public static final String SHOT = "shot";
     public static final String CARD_POSITION = "card_position";
     public static final String RECIPE_ENDPOINT = "http://takkerapp.com:3000";
     public static final String DEFAULT_RECIPE_ID = "5380bfeff067fc8d3b6ca130";
@@ -64,7 +63,7 @@ public class CookingActivity extends Activity {
 
     private final VoiceConfig VOICE_CONFIG =
             new VoiceConfig("myhotwords",
-                    new String[]{PREVIOUS, NEXT, SHOT});
+                    new String[]{PREVIOUS, NEXT});
     private CardScrollView cardScrollView;
 
     private RecipeService recipeService;
@@ -82,7 +81,6 @@ public class CookingActivity extends Activity {
         setContentView(R.layout.loading);
         loading = (TextView) findViewById(R.id.loading);
         loadingIndeterminate = (SliderView) findViewById(R.id.indeterminate_loading);
-        loadingIndeterminate.startIndeterminate();
 
         voiceInputHelper = new VoiceInputHelper(this, new PieVoiceListener(),
                 VoiceInputHelper.newUserActivityObserver(this));
@@ -143,6 +141,7 @@ public class CookingActivity extends Activity {
         }
 
         setContentView(R.layout.loading);
+        loadingIndeterminate.startIndeterminate();
 
         tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
             @Override
@@ -265,13 +264,15 @@ public class CookingActivity extends Activity {
 
         List<Step> steps = currentRecipe.getSteps();
         for (Step step : steps) {
-            SimpleStepView stepView;
+            stepIndex++;
 
             // nem túl szép :)
             if (step.getType().equals("video")) {
                 VideoStepView videoStepView = new VideoStepView(this, "file:///" + step.getBody());
                 adapter.add(videoStepView);
             } else {
+                SimpleStepView stepView;
+
                 if (step.getType().equals("textTimer")) {
                     stepView = new TimerStepView(this, step.getBody(), step.getTimer());
                 } else {
@@ -282,7 +283,7 @@ public class CookingActivity extends Activity {
                     Picasso.with(CookingActivity.this).load(step.getImage().getGlassUrl()).into(stepView.getStepImageView());
                 }
 
-                stepView.setTimestamp(++stepIndex + "/" + steps.size());
+                stepView.setTimestamp(stepIndex + "/" + steps.size());
 
                 adapter.add(stepView);
             }
@@ -433,14 +434,6 @@ public class CookingActivity extends Activity {
                         if (pos < cardScrollView.getAdapter().getCount()) {
                             cardScrollView.setSelection(++pos);
                         }
-                    }
-                });
-            } else if (SHOT.equals(vc.getLiteral())) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Intent i = new Intent("com.google.glass.action.TAKE_PICTURE");
-                        startActivity(i);
                     }
                 });
             }
